@@ -59,15 +59,15 @@ int main(int argc, char** argv)
         dlib::array<array2d<unsigned char> > images_train, images_test;
         std::vector<std::vector<rectangle> > face_boxes_train, face_boxes_test;
 
-        load_image_dataset(images_train, face_boxes_train, faces_directory+"/training_data.xml");
-        load_image_dataset(images_test, face_boxes_test, faces_directory+"/testing_data.xml");
+        load_image_dataset(images_train, face_boxes_train, faces_directory+"/training.xml");
+        load_image_dataset(images_test, face_boxes_test, faces_directory+"/testing.xml");
 
-        psample_image_dataset<pyramid_down<2> >(images_train, face_boxes_train);
+        upsample_image_dataset<pyramid_down<2> >(images_train, face_boxes_train);
         upsample_image_dataset<pyramid_down<2> >(images_test,  face_boxes_test);
 
         typedef scan_fhog_pyramid<pyramid_down<6> > image_scanner_type;
         image_scanner_type scanner;
-        scanner.set_detection_window_size(80, 80);
+        scanner.set_detection_window_size(140, 40);
         structural_object_detection_trainer<image_scanner_type> trainer(scanner);
         trainer.set_num_threads(4);
         
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
 
         // Like everything in dlib, you can save your detector to disk using the
         // serialize() function.
-        serialize("concentric_circle_detector.svm") << detector;
+        serialize("detector.svm") << detector;
     }
     catch (exception& e)
     {
