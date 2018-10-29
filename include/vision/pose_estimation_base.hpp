@@ -52,10 +52,25 @@ private:
   Pose zero_pose;
 
 protected:
-  virtual dlib::object_detector<ImageScannerType> * get_object_detector() = 0;
-  virtual dlib::shape_predictor * get_shape_predictor() = 0;
-  virtual const std::vector<cv::Point3d> & get_object_points() = 0;
-  virtual const std::vector<int> & get_image_point_indices() = 0;
+  virtual dlib::object_detector<ImageScannerType> * get_object_detector()
+  {
+    return nullptr;
+  }
+
+  virtual dlib::shape_predictor * get_shape_predictor()
+  {
+    return nullptr;
+  }
+
+  virtual std::vector<cv::Point3d> * get_object_points()
+  {
+    return nullptr;
+  }
+
+  virtual std::vector<int> * get_image_point_indices()
+  {
+    return nullptr;
+  }
 
   /**
    *
@@ -160,6 +175,7 @@ protected:
       {
         box = &object_boxes[box_ind];
 
+        sum = 0;
         sum += std::abs(last_object_box.left() - box->left());
         sum += std::abs(last_object_box.right() - box->right());
         sum += std::abs(last_object_box.top() - box->top());
@@ -227,19 +243,29 @@ public:
    */
   Pose get_pose()
   {
+    std::cout << "0" << std::endl;
     // get downsample ratio for scaled down images
     double img_scale = camera.get_downsample_ratio();
+    std::cout << "1" << std::endl;
 
     // get normal and scaled-down grayscale images
-    const cv::Mat &gray_img = camera.get_gray_image();
-    const cv::Mat &small_gray_img = camera.get_small_gray_image();
-
+//    const cv::Mat &gray_img = camera.get_gray_image();
+//    std::cout << "2" << std::endl;
+//    const cv::Mat &small_gray_img = camera.get_small_gray_image();
+//    std::cout << "3" << std::endl;
+//
     // detect objects using the small image
-    std::vector<Rect> object_boxes = detect_objects(small_gray_img);
+    const cv::Mat_<cv::Vec3b>  &bgr_img = camera.get_image();
+    cv::Mat img(bgr_img);  // TODO - figure out how get around making a copy
+    std::cout << "4" << std::endl;
+    std::vector<Rect> object_boxes = detect_objects(img);
+    std::cout << "5" << std::endl;
     object_count = object_boxes.size();
+    std::cout << "6" << std::endl;
 
     // select an object box
-    Rect selected_object_box = select_object(object_boxes);
+    Rect selected_object_box = select_object(object_boxes, bgr_img.size().width, bgr_img.size().height);
+    std::cout << "7" << std::endl;
     if (selected_object_box == zero_box)  // no objects were detected
       return zero_pose;
 
@@ -253,12 +279,14 @@ public:
     selected_object_box.set_bottom(img_scale*selected_object_box.bottom());
 
     // locate features
-    dlib::cv_image<unsigned short> gray_img_dlib(gray_img);  // dlib image format
+    dlib::cv_image<unsigned short> gray_img_dlib(bgr_img);  // dlib image format
+    std::cout << "8" << std::endl;
     dlib::full_object_detection shape = (*pose_model)(gray_img_dlib, selected_object_box);
+    std::cout << "9" << std::endl;
 
     // load 2d image points to use
     image_pts.clear();
-    for (auto iter = image_pt_inds.begin(); iter != image_pt_inds.end(); iter++)
+    for (auto iter = image_pt_inds->begin(); iter != image_pt_inds->end(); iter++)
     {
       image_pts.push_back(cv::Point2d(shape.part(*iter).x(), shape.part(*iter).y()));
     }
@@ -266,7 +294,7 @@ public:
     // find the pose of the object
     cv::Mat rotation_vec;      // 3x1 (row x col)
     cv::Mat translation_vec;   // 3x1 (row x col)
-    cv::solvePnP(object_pts, image_pts, cam_matrix, dist_coeffs, rotation_vec, translation_vec);
+    cv::solvePnP((*object_pts), image_pts, cam_matrix, dist_coeffs, rotation_vec, translation_vec);
     Pose pose = {
       translation_vec.at<double>(1, 1),
       translation_vec.at<double>(2, 1),
