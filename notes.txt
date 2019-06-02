@@ -1,0 +1,1 @@
+Rolling my head to the right gives a negative roll angle.

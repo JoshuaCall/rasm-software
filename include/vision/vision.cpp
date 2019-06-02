@@ -10,6 +10,7 @@
 #include <fstream>
 #include <unistd.h>
 #include <cmath>
+#include <stdio.h>
 
 //Intrisics can be calculated using opencv sample code under opencv/sources/samples/cpp/tutorial_code/calib3d
 //Normally, you can also apprximate fx and fy by image width, cx by half image width, cy by half image height instead
@@ -19,13 +20,8 @@ double D[5] = {-2.3528667558034226e-02, 1.3301431879108856e+00, 0.0, 0.0,
 
 
 int main(int argc, char *argv[]){
-    cv::VideoCapture cap(1);
-    if (!cap.isOpened())
-        {
-        std::cout << "Unable to connect to camera" << std::endl;
-        return EXIT_FAILURE;
-        }
-     wchar_t *program = Py_DecodeLocale(argv[0], NULL);
+
+    wchar_t *program = Py_DecodeLocale(argv[0], NULL);
     if (program == NULL) {
         fprintf(stderr, "Fatal error: cannot decode argv[0]\n");
         exit(1);
@@ -33,6 +29,13 @@ int main(int argc, char *argv[]){
     Py_SetProgramName(program);  /* optional but recommended */
     Py_Initialize();
     PyRun_SimpleString("import serial\n");
+    PyRun_SimpleString("ser = serial.Serial('/dev/ttyACM0', 9600, timeout=5)");
+    cv::VideoCapture cap(1);
+    if (!cap.isOpened())
+        {
+        std::cout << "Unable to connect to camera" << std::endl;
+        return EXIT_FAILURE;
+        }
     //Load face detection and pose estimation models (dlib).
     dlib::frontal_face_detector detector;
     dlib::shape_predictor predictor;
@@ -158,6 +161,7 @@ int main(int argc, char *argv[]){
             double x_for_pose = my_x/temp.cols;
             double y_for_pose = my_y/temp.rows;
             //std::cout << x_for_pose << std::endl;
+            //TODO: DELETE THIS CODE THAT JUST PRINTS TO THE SCREEN AND TAKES UP TIME
             std::string command = "print(" + std::to_string(x_for_pose) + ")\n";
             PyRun_SimpleString(command.c_str());
             //std::cout << y_for_pose << std::endl;
@@ -173,30 +177,40 @@ int main(int argc, char *argv[]){
 
                           //show angle result
             //outtext << "X: " << std::setprecision(3) << euler_angle.at<double>(0);
-            outtext << "Distance from camera [in]: " << std::setprecision(3) << -translation_vec.at<double>(1, 1)/2.54;
+            double z_pos = -translation_vec.at<double>(1, 1)/2.54;
+            outtext << "Distance from camera [in]: " << std::setprecision(3) << z_pos;
             cv::putText(temp, outtext.str(), cv::Point(50, 40), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
-            outtext << "x position [in]: " << std::setprecision(3) << x_distance/2.54;
+            double x_pos = x_distance/2.54;
+            outtext << "x position [in]: " << std::setprecision(3) << x_pos;
             //outtext << "Y: " << std::setprecision(3) << euler_angle.at<double>(1);
             cv::putText(temp, outtext.str(), cv::Point(50, 60), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             //outtext << "Z: " << std::setprecision(3) << euler_angle.at<double>(2);
-            outtext << "y position [in]: " << std::setprecision(3) << y_distance/2.54;
+            double y_pos = y_distance/2.54;
+            outtext << "y position [in]: " << std::setprecision(3) << y_pos;
             cv::putText(temp, outtext.str(), cv::Point(50, 80), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             //outtext << "rot_vec 1: " << std::setprecision(3) << rotation_vec.at<double>(1, 1);
-            outtext << "Pitch in degrees: " << std::setprecision(3) << euler_angle.at<double>(0);
+            double pitch = euler_angle.at<double>(0);
+            outtext << "Pitch in degrees: " << std::setprecision(3) << pitch;
             cv::putText(temp, outtext.str(), cv::Point(50, 100), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             //outtext << "rot_vec 2: " << std::setprecision(3) << rotation_vec.at<double>(2, 1);
-            outtext << "Yaw in degrees: " << std::setprecision(3) << euler_angle.at<double>(1);
+            double yaw = euler_angle.at<double>(1);
+            outtext << "Yaw in degrees: " << std::setprecision(3) << yaw;
             cv::putText(temp, outtext.str(), cv::Point(50, 120), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             //outtext << "rot_vec 3: " << std::setprecision(3) << rotation_vec.at<double>(3, 1);
-            outtext << "Roll in degrees: " << std::setprecision(3) << euler_angle.at<double>(2);
+            double roll = euler_angle.at<double>(2);
+            outtext << "Roll in degrees: " << std::setprecision(3) << roll;
             cv::putText(temp, outtext.str(), cv::Point(50, 140), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
-
+            char buffer[100];
+            sprintf(buffer,"ser.write('%+02d\\x00'.encode())", (int)roll);
+            //TODO: remove this frpintf that was included for debugging
+            fprintf(stdout, "%s", buffer);
+            PyRun_SimpleString(buffer);
             image_pts.clear();
             }
  //press esc to end
