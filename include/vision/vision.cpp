@@ -207,7 +207,7 @@ int main(int argc, char *argv[]){
             cv::putText(temp, outtext.str(), cv::Point(50, 140), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             char buffer[100];
-            sprintf(buffer,"ser.write('#%+02d\\x00'.encode())", (int)roll);
+            sprintf(buffer,"ser.write('#%+03d\\x00'.encode())", (int)roll*3);
             //TODO: remove this frpintf that was included for debugging
             fprintf(stdout, "%s", buffer);
             PyRun_SimpleString(buffer);

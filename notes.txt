@@ -1,1 +1,4 @@
 Rolling my head to the right gives a negative roll angle.
+
+
+planB-arduino/arduino-demos/arduino_3/arduino_3.ino has code for the encoders
