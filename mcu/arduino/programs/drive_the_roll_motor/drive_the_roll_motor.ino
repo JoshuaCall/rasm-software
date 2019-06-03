@@ -3,6 +3,8 @@
 DualMC33926MotorShield md;
 char buf[14];
 const int width_angle = 4;
+int speed = 0;
+
 
 
 void setup()
@@ -18,16 +20,9 @@ void loop()
     Serial.readBytes(buf, width_angle);
     //Note that this will require a null terminated string!!!!!
     //The string required will be of the format "sign" "width_angle - 2 integers" "null"
-    int speed = atoi(buf);
+    speed = atoi(buf);
+  }
     int roll_encoder_reading = analogRead(A5);
-    if(roll_encoder_reading > 820 && speed > 0)
-    {
-      speed = 0;
-    }
-    else if(roll_encoder_reading < 650 && speed < 0)
-    {
-      speed = 0;
-    }
     if(abs(speed) > 60)
     {
       if(speed > 0){
@@ -48,6 +43,13 @@ void loop()
         speed = -30;
       }
     }
+    if(roll_encoder_reading > 820 && speed > 0)
+    {
+      speed = 0;
+    }
+    else if(roll_encoder_reading < 650 && speed < 0)
+    {
+      speed = 0;
+    }
     md.setM1Speed(speed);
-  }
 }
