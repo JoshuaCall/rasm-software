@@ -207,9 +207,11 @@ int main(int argc, char *argv[]){
             cv::putText(temp, outtext.str(), cv::Point(50, 140), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             char buffer[100];
-            sprintf(buffer,"ser.write('#%+03d\\x00'.encode())", (int)roll*3);
-            //TODO: remove this frpintf that was included for debugging
-            fprintf(stdout, "%s", buffer);
+            if(abs(roll) < 5)
+            {
+              roll = 0.0;
+            }
+            sprintf(buffer,"ser.write('#%+03d\\x00'.encode())", (int)(roll*-2));
             PyRun_SimpleString(buffer);
             image_pts.clear();
             }
