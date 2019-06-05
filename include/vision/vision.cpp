@@ -95,8 +95,10 @@ int main(int argc, char *argv[]){
 
     //text on screen
     std::ostringstream outtext;
-    bool still = false;
-    time_t time_since_still = 0;
+    bool still_roll = false;
+    bool still_y = false;
+    time_t time_since_still_roll = 0;
+    time_t time_since_still_y = 0;
     while (1)
     {
       //usleep(500000);
@@ -164,9 +166,6 @@ int main(int argc, char *argv[]){
             double x_for_pose = my_x/temp.cols;
             double y_for_pose = my_y/temp.rows;
             //std::cout << x_for_pose << std::endl;
-            //TODO: DELETE THIS CODE THAT JUST PRINTS TO THE SCREEN AND TAKES UP TIME
-            std::string command = "print(" + std::to_string(x_for_pose) + ")\n";
-            PyRun_SimpleString(command.c_str());
             //std::cout << y_for_pose << std::endl;
             x_for_pose = x_for_pose -0.5;
             y_for_pose = y_for_pose -0.5;
@@ -210,24 +209,43 @@ int main(int argc, char *argv[]){
             cv::putText(temp, outtext.str(), cv::Point(50, 140), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             char buffer[100];
-            if(still)
+            if(still_roll)
             {
-              time_since_still = time(NULL);
+              time_since_still_roll = time(NULL);
             }
             if(abs(roll) < 5)
             {
               roll = 0.0;
-              still = true;
+              still_roll = true;
             }
             else
             {
-              still = false;
+              still_roll = false;
             }
-            if(time(NULL) < time_since_still + debounce_camera_time_delay)
+            if(time(NULL) < time_since_still_roll + debounce_camera_time_delay)
             {
               roll = 0.0;
             }
             sprintf(buffer,"ser.write('#%+03d\\x00'.encode())", (int)(roll*-2));
+            PyRun_SimpleString(buffer);
+            if(still_y)
+            {
+              time_since_still_y = time(NULL);
+            }
+            if(abs(y_pos) <= 3)
+            {
+              y_pos = 0;
+              still_y = true;
+            }
+            else
+            {
+              still_y = false;
+            }
+            if(time(NULL) < time_since_still_y + debounce_camera_time_delay)
+            {
+              y_pos = 0.0;
+            }
+            sprintf(buffer,"ser.write('$%+03d\\x00'.encode())", (int)(y_pos*-2));
             PyRun_SimpleString(buffer);
             image_pts.clear();
             }
