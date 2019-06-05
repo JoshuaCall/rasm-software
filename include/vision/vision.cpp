@@ -11,13 +11,14 @@
 #include <unistd.h>
 #include <cmath>
 #include <stdio.h>
+#include <time.h>
 
 //Intrisics can be calculated using opencv sample code under opencv/sources/samples/cpp/tutorial_code/calib3d
 //Normally, you can also apprximate fx and fy by image width, cx by half image width, cy by half image height instead
 double K[9] = {7.3530833553043510e+02, 0.0, 320.0, 0.0, 7.3530833553043510e+02, 240.0, 0.0, 0.0, 1.0};
 double D[5] = {-2.3528667558034226e-02, 1.3301431879108856e+00, 0.0, 0.0,
     -6.0786673300480434e+00};
-
+const int debounce_camera_time_delay = 1;
 
 int main(int argc, char *argv[]){
 
@@ -94,6 +95,8 @@ int main(int argc, char *argv[]){
 
     //text on screen
     std::ostringstream outtext;
+    bool still = false;
+    time_t time_since_still = 0;
     while (1)
     {
       //usleep(500000);
@@ -207,7 +210,20 @@ int main(int argc, char *argv[]){
             cv::putText(temp, outtext.str(), cv::Point(50, 140), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             char buffer[100];
+            if(still)
+            {
+              time_since_still = time(NULL);
+            }
             if(abs(roll) < 5)
+            {
+              roll = 0.0;
+              still = true;
+            }
+            else
+            {
+              still = false;
+            }
+            if(time(NULL) < time_since_still + debounce_camera_time_delay)
             {
               roll = 0.0;
             }
