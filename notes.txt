@@ -2,3 +2,9 @@ Rolling my head to the right gives a negative roll angle.
 
 
 planB-arduino/arduino-demos/arduino_3/arduino_3.ino has code for the encoders
+
+There is a flaw in the design! If the base motor has moved the shaft all the way up and you turn the shoulder too far, the wire harness get contorted
+and snaps off!
+
+The colors for the encoder wiring on the shoulder are red with red, yellow with green, and blue with white, and bare wire with bare wire?
+                                                        i.e., red/red, yellow/green, blue/white.
