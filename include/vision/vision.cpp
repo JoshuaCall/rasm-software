@@ -1,3 +1,5 @@
+//Note that according to the python documentation, 
+//the Python.h header file should be included first, before any other header file.
 #include <Python.h>
 #include <iostream>
 #include <dlib/opencv.h>
@@ -97,8 +99,10 @@ int main(int argc, char *argv[]){
     std::ostringstream outtext;
     bool still_roll = false;
     bool still_y = false;
+    bool still_x = false;
     time_t time_since_still_roll = 0;
     time_t time_since_still_y = 0;
+    time_t time_since_still_x = 0;
     while (1)
     {
       //usleep(500000);
@@ -245,7 +249,29 @@ int main(int argc, char *argv[]){
             {
               y_pos = 0.0;
             }
+
             sprintf(buffer,"ser.write('$%+03d\\x00'.encode())", (int)(y_pos*-2));
+            PyRun_SimpleString(buffer);
+
+            if(still_x)
+            {
+              time_since_still_x = time(NULL);
+            }
+            if(abs(x_pos) <= 3)
+            {
+              x_pos = 0;
+              still_x = true;
+            }
+            else
+            {
+              still_x = false;
+            }
+            if(time(NULL) < time_since_still_x + debounce_camera_time_delay)
+            {
+              x_pos = 0.0;
+            }
+
+            sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(x_pos*-2));
             PyRun_SimpleString(buffer);
             image_pts.clear();
             }

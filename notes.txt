@@ -8,3 +8,5 @@ and snaps off!
 
 The colors for the encoder wiring on the shoulder are red with red, yellow with green, and blue with white, and bare wire with bare wire?
                                                         i.e., red/red, yellow/green, blue/white.
+
+When the arm is extended all the way out, the RASM is VERY unstable.
