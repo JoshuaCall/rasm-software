@@ -169,7 +169,12 @@ int main(int argc, char *argv[]){
             cv::line(temp, reprojectdst[1], reprojectdst[5], cv::Scalar(0, 0, 255));
             cv::line(temp, reprojectdst[2], reprojectdst[6], cv::Scalar(0, 0, 255));
             cv::line(temp, reprojectdst[3], reprojectdst[7], cv::Scalar(0, 0, 255));
+
+            //This line of code finds the point that is located at the center of the face that
+            //is being detected.
             cv::Point2d my_point = ((reprojectdst[0] + reprojectdst[1] + reprojectdst[2] + reprojectdst[3] + reprojectdst[4] + reprojectdst[5] + reprojectdst[6] + reprojectdst[7])/8);
+            //Get the x and y coordinates of the point at the center of the face that is being
+            //detected.
             double my_x = my_point.x;
             double my_y = my_point.y;
             double x_for_pose = my_x/temp.cols;
