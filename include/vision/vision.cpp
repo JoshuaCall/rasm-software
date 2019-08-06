@@ -21,9 +21,12 @@ double K[9] = {7.3530833553043510e+02, 0.0, 320.0, 0.0, 7.3530833553043510e+02, 
 double D[5] = {-2.3528667558034226e-02, 1.3301431879108856e+00, 0.0, 0.0,
     -6.0786673300480434e+00};
 const int debounce_camera_time_delay = 1;
+const double centimeter_to_inch_conversion = 1/2.54;
 
 int main(int argc, char *argv[]){
 
+  //The python documentation explains much of the python code (see "Extending and Embedding
+  //Python")
     wchar_t *program = Py_DecodeLocale(argv[0], NULL);
     if (program == NULL) {
         fprintf(stderr, "Fatal error: cannot decode argv[0]\n");
@@ -31,6 +34,7 @@ int main(int argc, char *argv[]){
     }
     Py_SetProgramName(program);  /* optional but recommended */
     Py_Initialize();
+    //Make the serial connection via the Python interpreter
     PyRun_SimpleString("import serial\n");
     PyRun_SimpleString("ser = serial.Serial('/dev/ttyACM0', 9600, timeout=5)");
     cv::VideoCapture cap(1);
@@ -103,6 +107,7 @@ int main(int argc, char *argv[]){
     time_t time_since_still_roll = 0;
     time_t time_since_still_y = 0;
     time_t time_since_still_x = 0;
+    //Loop until the escape key is pressed.
     while (1)
     {
       //usleep(500000);
@@ -183,17 +188,17 @@ int main(int argc, char *argv[]){
 
                           //show angle result
             //outtext << "X: " << std::setprecision(3) << euler_angle.at<double>(0);
-            double z_pos = -translation_vec.at<double>(1, 1)/2.54;
+            double z_pos = -translation_vec.at<double>(1, 1)*centimeter_to_inch_conversion;
             outtext << "Distance from camera [in]: " << std::setprecision(3) << z_pos;
             cv::putText(temp, outtext.str(), cv::Point(50, 40), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
-            double x_pos = x_distance/2.54;
+            double x_pos = x_distance*centimeter_to_inch_conversion;
             outtext << "x position [in]: " << std::setprecision(3) << x_pos;
             //outtext << "Y: " << std::setprecision(3) << euler_angle.at<double>(1);
             cv::putText(temp, outtext.str(), cv::Point(50, 60), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             //outtext << "Z: " << std::setprecision(3) << euler_angle.at<double>(2);
-            double y_pos = y_distance/2.54;
+            double y_pos = y_distance*centimeter_to_inch_conversion;
             outtext << "y position [in]: " << std::setprecision(3) << y_pos;
             cv::putText(temp, outtext.str(), cv::Point(50, 80), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
