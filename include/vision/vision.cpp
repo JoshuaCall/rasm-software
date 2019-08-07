@@ -104,9 +104,12 @@ int main(int argc, char *argv[]){
     bool still_roll = false;
     bool still_y = false;
     bool still_x = false;
+    bool elbow_speed_not_necessarily_zero = true;
     time_t time_since_still_roll = 0;
     time_t time_since_still_y = 0;
     time_t time_since_still_x = 0;
+    time_t time_since_change_elbow_speed = 0;
+    time_t time_at_change_in_elbow_speed = time(NULL);
     //Loop until the escape key is pressed.
     while (1)
     {
@@ -122,7 +125,7 @@ int main(int argc, char *argv[]){
 
         // Find the pose of each face
         if (faces.size() > 0)
-            {
+        {
             //std::cout << "DETECTED " << faces.size() << std::endl << std::endl;
             //track features
             dlib::full_object_detection shape = predictor(cimg, faces[0]);
@@ -280,11 +283,32 @@ int main(int argc, char *argv[]){
             {
               x_pos = 0.0;
             }
-
-            sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(x_pos*-2));
-            PyRun_SimpleString(buffer);
-            image_pts.clear();
+            if(elbow_speed_not_necessarily_zero && time_since_change_elbow_speed == 0)
+            {
+              sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(x_pos*-2));
+              PyRun_SimpleString(buffer);
+              time_since_change_elbow_speed = time(NULL) - time_at_change_in_elbow_speed;
             }
+            else if(elbow_speed_not_necessarily_zero && time_since_change_elbow_speed > 0)
+            {
+              elbow_speed_not_necessarily_zero = false;
+              time_at_change_in_elbow_speed = time(NULL);
+              time_since_change_elbow_speed = 0;
+            }
+            else if(!elbow_speed_not_necessarily_zero && time_since_change_elbow_speed == 0)
+            {
+              sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(0));
+              PyRun_SimpleString(buffer);
+              time_since_change_elbow_speed = time(NULL) - time_at_change_in_elbow_speed;
+            }
+            else if(!elbow_speed_not_necessarily_zero && time_since_change_elbow_speed > 0)
+            {
+              elbow_speed_not_necessarily_zero = true;
+              time_at_change_in_elbow_speed = time(NULL);
+              time_since_change_elbow_speed = 0;
+            }
+            image_pts.clear();
+        }
  //press esc to end
         cv::namedWindow( "demo", cv::WINDOW_NORMAL);
         cv::imshow("demo", temp);
