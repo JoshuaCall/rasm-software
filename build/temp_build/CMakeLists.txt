@@ -15,6 +15,7 @@ add_executable(video_test_shape
   /home/browse/Documents/fall_2018/me4010/rasm-v2/include/vision/test_file.cpp)
 add_executable(vision_func
   /home/browse/Documents/summer_2019/RASM/rasm-software/include/vision/vision.cpp)
+add_executable(q ~/q.cpp)
 #add_executable(camera_calibration
 #  /home/browse/Documents/fall_2018/me4010/lib/lib/download/opencv-3.4.1/samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp)
 include_directories(${PYTHON_INCLUDE_DIRS})
@@ -29,6 +30,7 @@ target_link_libraries( temp_main ${OpenCV_LIBS} )
 target_link_libraries( video_test_shape ${OpenCV_LIBS} )
 target_link_libraries( vision_func ${OpenCV_LIBS} )
 target_link_libraries( vision_func ${PYTHON_LIBRARIES})
+target_link_libraries( q ${PYTHON_LIBRARIES})
 #target_link_libraries( camera_calibration ${OpenCV_LIBS} )
 #target_link_libraries( create_detector ${OpenCV_LIBS} )
 #target_link_libraries( create_shape_predictor ${OpenCV_LIBS} )

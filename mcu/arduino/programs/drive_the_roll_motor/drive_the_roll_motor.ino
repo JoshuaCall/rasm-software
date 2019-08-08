@@ -81,26 +81,14 @@ void loop()
     x_speed = atoi(buf);
   }
   int elbow_encoder_reading = analogRead(A4);
-  if (abs(x_speed) > 60)
-  {
-    if (x_speed > 0) {
-      x_speed = 70;
-    }
-    else if (x_speed < 0)
-    {
-      x_speed = -70;
-    }
-  }
-  else if (abs(x_speed) < 30)
-  {
-    if (x_speed > 0) {
-      x_speed = 70;
-    }
-    else if (x_speed < 0)
-    {
-      x_speed = -50;
-    }
-  }
+//  if (x_speed > 0)
+//  {
+//    x_speed = 60;
+//  }
+//  if (x_speed < 0)
+//  {
+//    x_speed = -60;
+//  }
   if (elbow_encoder_reading > 910 && x_speed > 0)
   {
     x_speed = 0;

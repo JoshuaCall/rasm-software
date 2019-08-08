@@ -11,5 +11,4 @@ The colors for the encoder wiring on the shoulder are red with red, yellow with 
 
 When the arm is extended all the way out, the RASM is VERY unstable.
 
-Make sure that 27 is the ASCII code for escape when I have internet access.
 Bring camera with me.
