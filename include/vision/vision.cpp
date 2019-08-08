@@ -23,8 +23,6 @@ double D[5] = {-2.3528667558034226e-02, 1.3301431879108856e+00, 0.0, 0.0,
 const int debounce_camera_time_delay = 1;
 const double centimeter_to_inch_conversion = 1/2.54;
 
-int get_millis_passed(struct timespec);
-
 int main(int argc, char *argv[]){
 
   //The python documentation explains much of the python code (see "Extending and Embedding
@@ -106,16 +104,9 @@ int main(int argc, char *argv[]){
     bool still_roll = false;
     bool still_y = false;
     bool still_x = false;
-    bool elbow_speed_not_necessarily_zero = true;
     time_t time_since_still_roll = 0;
     time_t time_since_still_y = 0;
     time_t time_since_still_x = 0;
-    time_t time_since_change_elbow_speed = 0;
-    struct timespec time_at_change_in_elbow_speed;
-    clock_gettime(CLOCK_MONOTONIC, &time_at_change_in_elbow_speed);
-    double x_pos = 0;
-    char buffer[100];
-    int elbow_delay_millis = 250;
     //Loop until the escape key is pressed.
     while (1)
     {
@@ -131,7 +122,7 @@ int main(int argc, char *argv[]){
 
         // Find the pose of each face
         if (faces.size() > 0)
-        {
+            {
             //std::cout << "DETECTED " << faces.size() << std::endl << std::endl;
             //track features
             dlib::full_object_detection shape = predictor(cimg, faces[0]);
@@ -206,7 +197,7 @@ int main(int argc, char *argv[]){
             outtext << "Distance from camera [in]: " << std::setprecision(3) << z_pos;
             cv::putText(temp, outtext.str(), cv::Point(50, 40), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
-            x_pos = x_distance*centimeter_to_inch_conversion;
+            double x_pos = x_distance*centimeter_to_inch_conversion;
             outtext << "x position [in]: " << std::setprecision(3) << x_pos;
             //outtext << "Y: " << std::setprecision(3) << euler_angle.at<double>(1);
             cv::putText(temp, outtext.str(), cv::Point(50, 60), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
@@ -231,6 +222,7 @@ int main(int argc, char *argv[]){
             outtext << "Roll in degrees: " << std::setprecision(3) << roll;
             cv::putText(temp, outtext.str(), cv::Point(50, 140), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
+            char buffer[100];
             if(still_roll)
             {
               time_since_still_roll = time(NULL);
@@ -288,34 +280,11 @@ int main(int argc, char *argv[]){
             {
               x_pos = 0.0;
             }
-            image_pts.clear();
-        }
 
-        if(elbow_speed_not_necessarily_zero && time_since_change_elbow_speed < elbow_delay_millis)
-        {
-          //sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(x_pos*-2));
-          sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(60));
-          PyRun_SimpleString(buffer);
-          time_since_change_elbow_speed = get_millis_passed(time_at_change_in_elbow_speed);
-        }
-        else if(elbow_speed_not_necessarily_zero && time_since_change_elbow_speed >= elbow_delay_millis)
-        {
-          elbow_speed_not_necessarily_zero = false;
-          clock_gettime(CLOCK_MONOTONIC, &time_at_change_in_elbow_speed);
-          time_since_change_elbow_speed = 0;
-        }
-        else if(!elbow_speed_not_necessarily_zero && time_since_change_elbow_speed < elbow_delay_millis)
-        {
-          sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(0));
-          PyRun_SimpleString(buffer);
-          time_since_change_elbow_speed = get_millis_passed(time_at_change_in_elbow_speed);
-        }
-        else if(!elbow_speed_not_necessarily_zero && time_since_change_elbow_speed >= elbow_delay_millis)
-        {
-          elbow_speed_not_necessarily_zero = true;
-          clock_gettime(CLOCK_MONOTONIC, &time_at_change_in_elbow_speed);
-          time_since_change_elbow_speed = 0;
-        }
+            sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(x_pos*-2));
+            PyRun_SimpleString(buffer);
+            image_pts.clear();
+            }
  //press esc to end
         cv::namedWindow( "demo", cv::WINDOW_NORMAL);
         cv::imshow("demo", temp);
@@ -329,14 +298,3 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-int get_millis_passed(struct timespec time_at_change_in_elbow_speed)
-{
-  struct timespec current_time;
-  clock_gettime(CLOCK_MONOTONIC, &current_time);
-  time_t difference_between_seconds = current_time.tv_sec - time_at_change_in_elbow_speed.tv_sec;
-  long difference_between_nanos = current_time.tv_nsec - time_at_change_in_elbow_speed.tv_nsec;
-  long difference_between_seconds_in_millis = difference_between_seconds * 1000;
-  long difference_between_nanos_in_millis = difference_between_nanos / 1000000;
-  int difference_in_millis = difference_between_seconds_in_millis + difference_between_nanos_in_millis;
-  return difference_in_millis;
-}

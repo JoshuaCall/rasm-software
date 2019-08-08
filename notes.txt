@@ -12,3 +12,14 @@ The colors for the encoder wiring on the shoulder are red with red, yellow with 
 When the arm is extended all the way out, the RASM is VERY unstable.
 
 Bring camera with me.
+
+
+"cap >> temp" is causing problems for clock_gettime(). See the ~/q* files. 
+Please note that millis() will overflow after 50 days of continuous operation of the Arduino program!
+
+||Where to go from here?
+||Talk to Prof. Merryweather, Ross, people in the lab.
+||Train different angles of the face? Yikes
+||What to do about noise?
+||Smoother motors? How?
+||DH parameters? How to move properly through 6 degrees of freedom?

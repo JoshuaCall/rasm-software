@@ -34,3 +34,5 @@ target_link_libraries( q ${PYTHON_LIBRARIES})
 #target_link_libraries( camera_calibration ${OpenCV_LIBS} )
 #target_link_libraries( create_detector ${OpenCV_LIBS} )
 #target_link_libraries( create_shape_predictor ${OpenCV_LIBS} )
+#message("CMAKE_CXX_FLAGS_RELWITHDEBINFO is ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+

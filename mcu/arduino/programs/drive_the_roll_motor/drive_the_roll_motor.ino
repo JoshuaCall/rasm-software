@@ -7,6 +7,12 @@ const int width_angle = 4;
 int roll_speed = 0;
 int y_speed = 0;
 int x_speed = 0;
+bool elbow_speed_not_necessarily_zero = true;
+unsigned long time_at_change_in_elbow_speed = millis();
+unsigned long time_since_change_elbow_speed = 0;
+unsigned long elbow_delay_millis = 150;
+
+
 
 
 void setup()
@@ -81,14 +87,35 @@ void loop()
     x_speed = atoi(buf);
   }
   int elbow_encoder_reading = analogRead(A4);
-//  if (x_speed > 0)
-//  {
-//    x_speed = 60;
-//  }
-//  if (x_speed < 0)
-//  {
-//    x_speed = -60;
-//  }
+    if (x_speed > 0)
+    {
+      x_speed = 120;
+    }
+    if (x_speed < 0)
+    {
+      x_speed = -90;
+    }
+  if (elbow_speed_not_necessarily_zero && time_since_change_elbow_speed < elbow_delay_millis)
+  {
+    time_since_change_elbow_speed = millis() - time_at_change_in_elbow_speed;
+  }
+  else if (elbow_speed_not_necessarily_zero && time_since_change_elbow_speed >= elbow_delay_millis)
+  {
+    elbow_speed_not_necessarily_zero = false;
+    time_at_change_in_elbow_speed = millis();
+    time_since_change_elbow_speed = 0;
+  }
+  else if (!elbow_speed_not_necessarily_zero && time_since_change_elbow_speed < elbow_delay_millis)
+  {
+    x_speed = 0;
+    time_since_change_elbow_speed = millis() - time_at_change_in_elbow_speed;
+  }
+  else if (!elbow_speed_not_necessarily_zero && time_since_change_elbow_speed >= elbow_delay_millis)
+  {
+    elbow_speed_not_necessarily_zero = true;
+    time_at_change_in_elbow_speed = millis();
+    time_since_change_elbow_speed = 0;
+  }
   if (elbow_encoder_reading > 910 && x_speed > 0)
   {
     x_speed = 0;
