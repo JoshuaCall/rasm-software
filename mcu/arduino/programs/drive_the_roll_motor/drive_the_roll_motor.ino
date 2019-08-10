@@ -1,7 +1,15 @@
 #include "DualMC33926MotorShield.h"
 
+#define setRollSpeed(speed) md.setM1Speed(speed)
+#define setBaseSpeed(speed) md.setM2Speed(speed)
+#define setElbowSpeed(speed) md2.setM1Speed(speed)
+#define setShoulderSpeed(speed) md2.setM2Speed(speed)
+#define setPitchSpeed(speed) md3.setM1Speed(speed)
+#define setYawSpeed(speed) md3.setM2Speed(speed)
+
 DualMC33926MotorShield md;
-DualMC33926MotorShield md2(41, 44, A2, 42, 45, A3, 40, 43);
+DualMC33926MotorShield md2(41, 44, A2, 42, 45, A3, 40, 43); //M1DIR, M1PWM, M1FB, M2DIR, M2PWM, M2FB, nD2, nSF
+DualMC33926MotorShield md3(53,13,A14, 52, 46, A15, 51, 50);
 char buf[14];
 const int width_angle = 4;
 int roll_speed = 0;
@@ -11,15 +19,18 @@ bool elbow_speed_not_necessarily_zero = true;
 unsigned long time_at_change_in_elbow_speed = millis();
 unsigned long time_since_change_elbow_speed = 0;
 unsigned long elbow_delay_millis = 150;
-
-
-
+int roll_encoder_pin = A5;
+int elbow_encoder_pin = A8;
+int pitch_encoder_pin = A6;
+int yaw_encoder_pin = A7;
+int shoulder_encoder_pin = A4;
 
 void setup()
 {
   Serial.begin(9600);
   md.init();
   md2.init();
+  md3.init();
 }
 
 void loop()
@@ -31,7 +42,7 @@ void loop()
     //The string required will be of the format "sign" "width_angle - 2 integers" "null"
     roll_speed = atoi(buf);
   }
-  int roll_encoder_reading = analogRead(A5);
+  int roll_encoder_reading = analogRead(roll_encoder_pin);
   if (abs(roll_speed) > 60)
   {
     if (roll_speed > 0) {
@@ -60,7 +71,7 @@ void loop()
   {
     roll_speed = 0;
   }
-  md.setM1Speed(roll_speed);
+  setRollSpeed(roll_speed);
   if (Serial.read() == '$')
   {
     Serial.readBytes(buf, width_angle);
@@ -70,14 +81,14 @@ void loop()
   }
   if (y_speed > 0)
   {
-    md.setM2Speed(-400);
+    setBaseSpeed(-400);
   }
   else if (y_speed < 0) {
-    md.setM2Speed(400);
+    setBaseSpeed(400);
   }
   else if (y_speed == 0)
   {
-    md.setM2Speed(0);
+    setBaseSpeed(0);
   }
   if (Serial.read() == '^')
   {
@@ -86,7 +97,7 @@ void loop()
     //The string required will be of the format "sign" "width_angle - 2 integers" "null"
     x_speed = atoi(buf);
   }
-  int elbow_encoder_reading = analogRead(A4);
+  int elbow_encoder_reading = analogRead(elbow_encoder_pin);
     if (x_speed > 0)
     {
       x_speed = 120;
@@ -124,5 +135,5 @@ void loop()
   {
     x_speed = 0;
   }
-  md2.setM1Speed(x_speed);
+  setElbowSpeed(x_speed);
 }

@@ -223,6 +223,7 @@ int main(int argc, char *argv[]){
             cv::putText(temp, outtext.str(), cv::Point(50, 140), cv::FONT_HERSHEY_SIMPLEX, 0.75, cv::Scalar(0, 0, 0));
             outtext.str("");
             char buffer[100];
+            ////////////////////////// roll /////////////////////////////////// #
             if(still_roll)
             {
               time_since_still_roll = time(NULL);
@@ -242,6 +243,48 @@ int main(int argc, char *argv[]){
             }
             sprintf(buffer,"ser.write('#%+03d\\x00'.encode())", (int)(roll*-2));
             PyRun_SimpleString(buffer);
+            
+            ///////////////////////// pitch ////////////////////////////////// &
+            if(still_pitch)
+            {
+              time_since_still_pitch = time(NULL);
+            }
+            if(abs(pitch) < 5)
+            {
+              pitch = 0.0;
+              still_pitch = true;
+            }
+            else
+            {
+              still_pitch = false;
+            }
+            if(time(NULL) < time_since_still_pitch + debounce_camera_time_delay)
+            {
+              pitch = 0.0;
+            }
+            sprintf(buffer,"ser.write('&%+03d\\x00'.encode())", (int)(pitch*-2));
+            PyRun_SimpleString(buffer);
+            ///////////////////////// yaw ///////////////////////////////////// *
+            if(still_yaw)
+            {
+              time_since_still_yaw = time(NULL);
+            }
+            if(abs(yaw) < 5)
+            {
+              yaw = 0.0;
+              still_yaw = true;
+            }
+            else
+            {
+              still_yaw = false;
+            }
+            if(time(NULL) < time_since_still_yaw + debounce_camera_time_delay)
+            {
+              yaw = 0.0;
+            }
+            sprintf(buffer,"ser.write('*%+03d\\x00'.encode())", (int)(yaw*-2));
+            PyRun_SimpleString(buffer);
+            ///////////////////////// y /////////////////////////////////////// $
             if(still_y)
             {
               time_since_still_y = time(NULL);
@@ -263,6 +306,7 @@ int main(int argc, char *argv[]){
             sprintf(buffer,"ser.write('$%+03d\\x00'.encode())", (int)(y_pos*-2));
             PyRun_SimpleString(buffer);
 
+            /////////////////////// x //////////////////////////////////////// ^
             if(still_x)
             {
               time_since_still_x = time(NULL);
@@ -283,6 +327,9 @@ int main(int argc, char *argv[]){
 
             sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(x_pos*-2));
             PyRun_SimpleString(buffer);
+
+
+            ////////////////// clear image points ////////////////
             image_pts.clear();
             }
  //press esc to end
