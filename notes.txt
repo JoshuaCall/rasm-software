@@ -23,3 +23,33 @@ Please note that millis() will overflow after 50 days of continuous operation of
 ||What to do about noise?
 ||Smoother motors? How?
 ||DH parameters? How to move properly through 6 degrees of freedom?
+
+
+Colors of connections of top of the top motor driver:
+Top:
+White Yellow
+Bottom:
+| | | | Brown | | Red Green Orange Yellow | Red (12)
+
+
+It would probably be a good idea to replace the current call to Serial.readBytes(buf, width_angle) with a call to some
+version of Serial.readStringUntil(), which might require replacing atoi() with toInt().
+
+
+Just putting this here so I don't accidentally lose the right encoder values if I revert something to a previous commit:
+  if (pitch_encoder_reading < 90 && pitch_speed > 0)
+  {
+    pitch_speed = 0;
+  }
+  else if (pitch_encoder_reading > 150 && pitch_speed < 0)
+  {
+    pitch_speed = 0;
+  }
+  if (yaw_encoder_reading > 100 && yaw_encoder_reading < 700 && yaw_speed > 0)
+  {
+    yaw_speed = 0;
+  }
+  else if (yaw_encoder_reading < 900 && yaw_encoder_reading > 200 && yaw_speed < 0)
+  {
+    yaw_speed = 0;
+  }

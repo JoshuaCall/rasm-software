@@ -102,9 +102,13 @@ int main(int argc, char *argv[]){
     //text on screen
     std::ostringstream outtext;
     bool still_roll = false;
+    bool still_pitch = false;
+    bool still_yaw = false;
     bool still_y = false;
     bool still_x = false;
     time_t time_since_still_roll = 0;
+    time_t time_since_still_pitch = 0;
+    time_t time_since_still_yaw = 0;
     time_t time_since_still_y = 0;
     time_t time_since_still_x = 0;
     //Loop until the escape key is pressed.
@@ -243,6 +247,7 @@ int main(int argc, char *argv[]){
             }
             sprintf(buffer,"ser.write('#%+03d\\x00'.encode())", (int)(roll*-2));
             PyRun_SimpleString(buffer);
+            PyRun_SimpleString("ser.flush()");
             
             ///////////////////////// pitch ////////////////////////////////// &
             if(still_pitch)
@@ -262,8 +267,12 @@ int main(int argc, char *argv[]){
             {
               pitch = 0.0;
             }
-            sprintf(buffer,"ser.write('&%+03d\\x00'.encode())", (int)(pitch*-2));
+            sprintf(buffer,"ser.write('&%+03d\\x00'.encode())", (int)(pitch*2));
+
             PyRun_SimpleString(buffer);
+            PyRun_SimpleString("ser.flush()");
+
+
             ///////////////////////// yaw ///////////////////////////////////// *
             if(still_yaw)
             {
@@ -284,6 +293,13 @@ int main(int argc, char *argv[]){
             }
             sprintf(buffer,"ser.write('*%+03d\\x00'.encode())", (int)(yaw*-2));
             PyRun_SimpleString(buffer);
+            PyRun_SimpleString("ser.flush()");
+
+
+            outtext << buffer;
+            cv::putText(temp, outtext.str(), cv::Point(100, 200), cv::FONT_HERSHEY_SIMPLEX, 1.5, cv::Scalar(255, 255, 255), 3);
+            outtext.str("");
+
             ///////////////////////// y /////////////////////////////////////// $
             if(still_y)
             {
@@ -305,6 +321,9 @@ int main(int argc, char *argv[]){
 
             sprintf(buffer,"ser.write('$%+03d\\x00'.encode())", (int)(y_pos*-2));
             PyRun_SimpleString(buffer);
+            PyRun_SimpleString("ser.flush()");
+
+
 
             /////////////////////// x //////////////////////////////////////// ^
             if(still_x)
@@ -327,6 +346,8 @@ int main(int argc, char *argv[]){
 
             sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(x_pos*-2));
             PyRun_SimpleString(buffer);
+            PyRun_SimpleString("ser.flush()");
+
 
 
             ////////////////// clear image points ////////////////
