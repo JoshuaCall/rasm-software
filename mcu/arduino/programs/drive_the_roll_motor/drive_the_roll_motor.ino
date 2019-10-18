@@ -22,7 +22,7 @@ int x_speed = 0;
 bool elbow_speed_not_necessarily_zero = true;
 unsigned long time_at_change_in_elbow_speed = millis();
 unsigned long time_since_change_elbow_speed = 0;
-unsigned long elbow_delay_millis = 150;
+unsigned long elbow_delay_millis = 75;
 int roll_encoder_pin = A5;
 int elbow_encoder_pin = A8;
 int pitch_encoder_pin = A6;
@@ -109,13 +109,21 @@ void loop()
     x_speed = serial_input.toInt();
   }
     int elbow_encoder_reading = analogRead(elbow_encoder_pin);
-    if (x_speed > 0)
+    if (x_speed > 5)
     {
       x_speed = 120;
     }
-    if (x_speed < 0)
+    else if (x_speed < -5)
     {
       x_speed = -90;
+    }
+    else if (x_speed > 0)
+    {
+      x_speed = 90;
+    }
+    else if (x_speed < 0)
+    {
+      x_speed = -70;
     }
     if (elbow_speed_not_necessarily_zero && time_since_change_elbow_speed < elbow_delay_millis)
     {
@@ -166,10 +174,12 @@ void loop()
   //  }
   if (pitch_speed > 0) {
     pitch_speed = 150;
+    base_speed = -400;
   }
   else if (pitch_speed < 0)
   {
     pitch_speed = -50;
+    base_speed = 400;
   }
   if (pitch_encoder_reading < 90 && pitch_speed > 0)
   {
@@ -204,6 +214,8 @@ void loop()
   {
     yaw_speed = 0;
   }
+
+  ////// Set Motor Speeds ///////////////////////////////////////
     setBaseSpeed(base_speed);
     setRollSpeed(roll_speed);
     setPitchSpeed(pitch_speed);

@@ -272,6 +272,9 @@ int main(int argc, char *argv[]){
             PyRun_SimpleString(buffer);
             PyRun_SimpleString("ser.flush()");
 
+            outtext << buffer;
+            cv::putText(temp, outtext.str(), cv::Point(100, 200), cv::FONT_HERSHEY_SIMPLEX, 1.5, cv::Scalar(255, 255, 255), 3);
+            outtext.str("");
 
             ///////////////////////// yaw ///////////////////////////////////// *
             if(still_yaw)
@@ -296,9 +299,6 @@ int main(int argc, char *argv[]){
             PyRun_SimpleString("ser.flush()");
 
 
-            outtext << buffer;
-            cv::putText(temp, outtext.str(), cv::Point(100, 200), cv::FONT_HERSHEY_SIMPLEX, 1.5, cv::Scalar(255, 255, 255), 3);
-            outtext.str("");
 
             ///////////////////////// y /////////////////////////////////////// $
             if(still_y)
@@ -344,7 +344,7 @@ int main(int argc, char *argv[]){
               x_pos = 0.0;
             }
 
-            sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(x_pos*-2));
+            sprintf(buffer,"ser.write('^%+03d\\x00'.encode())", (int)(-x_pos));
             PyRun_SimpleString(buffer);
             PyRun_SimpleString("ser.flush()");
 
