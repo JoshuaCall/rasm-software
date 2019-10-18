@@ -1,0 +1,9 @@
+/home/browse/Documents/summer_2019/RASM/rasm-software/build/temp_build/CMakeFiles/edit_cache.dir
+/home/browse/Documents/summer_2019/RASM/rasm-software/build/temp_build/CMakeFiles/rebuild_cache.dir
+/home/browse/Documents/summer_2019/RASM/rasm-software/build/temp_build/CMakeFiles/q.dir
+/home/browse/Documents/summer_2019/RASM/rasm-software/build/temp_build/CMakeFiles/vision_func.dir
+/home/browse/Documents/summer_2019/RASM/rasm-software/build/temp_build/CMakeFiles/temp_main.dir
+/home/browse/Documents/summer_2019/RASM/rasm-software/build/temp_build/CMakeFiles/video_test_shape.dir
+/home/browse/Documents/summer_2019/RASM/rasm-software/build/temp_build/dlib_build/CMakeFiles/rebuild_cache.dir
+/home/browse/Documents/summer_2019/RASM/rasm-software/build/temp_build/dlib_build/CMakeFiles/dlib.dir
+/home/browse/Documents/summer_2019/RASM/rasm-software/build/temp_build/dlib_build/CMakeFiles/edit_cache.dir

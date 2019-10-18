@@ -1,0 +1,38 @@
+cmake_minimum_required(VERSION 2.8.12)
+# Every project needs a name.  We call this the "examples" project.
+project(test_vision)
+find_package( OpenCV REQUIRED )
+find_package( PythonLibs 3 REQUIRED )
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+add_subdirectory(/home/browse/Documents/fall_2018/me4010/lib/lib/download/dlib-19.13/dlib dlib_build)
+#add_subdirectory(/home/browse/Documents/fall_2018/me4010/lib/lib/download/opencv-3.4.1 opencv_build)
+add_executable(temp_main temporary_main.cpp)
+#add_executable(create_detector
+#  /home/browse/Documents/fall_2018/me4010/rasm-v2/test/filesysroot/rasm_2_1/data/vision/detection/images/create_detector.cpp)
+#add_executable (create_shape_predictor
+#  /home/browse/Documents/fall_2018/me4010/rasm-v2/test/filesysroot/rasm_2_1/data/vision/detection/images/create_shape_predictor.cpp)
+add_executable(video_test_shape
+  /home/browse/Documents/fall_2018/me4010/rasm-v2/include/vision/test_file.cpp)
+add_executable(vision_func
+  /home/browse/Documents/summer_2019/RASM/rasm-software/main.cpp)
+add_executable(q ~/q.cpp)
+#add_executable(camera_calibration
+#  /home/browse/Documents/fall_2018/me4010/lib/lib/download/opencv-3.4.1/samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp)
+include_directories(${PYTHON_INCLUDE_DIRS})
+target_link_libraries(temp_main dlib::dlib)
+target_link_libraries(video_test_shape dlib::dlib)
+target_link_libraries(vision_func dlib::dlib)
+#target_link_libraries(create_detector dlib::dlib)
+#target_link_libraries(create_shape_predictor dlib::dlib)
+#target_compile_definitions(video_test_shape PRIVATE FILES)
+#target_link_libraries(temp_main opencv::opencv)
+target_link_libraries( temp_main ${OpenCV_LIBS} )
+target_link_libraries( video_test_shape ${OpenCV_LIBS} )
+target_link_libraries( vision_func ${OpenCV_LIBS} )
+target_link_libraries( vision_func ${PYTHON_LIBRARIES})
+target_link_libraries( q ${PYTHON_LIBRARIES})
+#target_link_libraries( camera_calibration ${OpenCV_LIBS} )
+#target_link_libraries( create_detector ${OpenCV_LIBS} )
+#target_link_libraries( create_shape_predictor ${OpenCV_LIBS} )
+#message("CMAKE_CXX_FLAGS_RELWITHDEBINFO is ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+
