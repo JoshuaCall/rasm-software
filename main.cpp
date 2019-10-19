@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
     dlib::frontal_face_detector detector;
     dlib::shape_predictor predictor;
     detector = dlib::get_frontal_face_detector();
-    dlib::deserialize("/home/browse/Documents/fall_2018/me4010/rasm-v2/test/filesysroot/rasm_2_1/data/vision/prediction/face_model_68_points.dat") >> predictor;
+    dlib::deserialize("../data/face_model_68_points.dat") >> predictor;
      //fill in cam intrinsics and distortion coefficients
     cv::Mat cam_matrix = cv::Mat(3, 3, CV_64FC1, K);
     cv::Mat dist_coeffs = cv::Mat(5, 1, CV_64FC1, D);
