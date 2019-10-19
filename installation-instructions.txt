@@ -1,0 +1,51 @@
+These instructions will be based on using a GNU/Linux operating system
+using the apt package manager.
+
+1. Download the dlib tar.bz2 file from dlib.net
+2. Extract this zipped archive into the folder of your choosing.
+3. Install cmake via 'sudo apt-get install cmake'
+4. Make the directory on your computer for where you want to store the RASM code.
+5. Install git via 'sudo apt-get install git' and then type 'git init' in the folder where you will store the code.
+Add the remote origin to the git repository by typing 'git remote add origin https://github.com/JoshuaCall/rasm-software'
+6. Install the code in that same directory using 'git pull https://github.com/JoshuaCall/rasm-software'
+7. Copy the file build/CMakeLists.txt to a new directory with the name of your choice, for example, a directory called myBuild/
+This new directory should be a subdirectory of the main repository directory. Otherwise, the data/face_model_68_points.dat will
+not be properly located by the code.
+All further references to CMakeLists.txt in these instructions will refer to this new, copied version of CMakeLists.txt
+in this new directory unless otherwise specified.
+8. Change the line of CMakeLists.txt that says 'add_subdirectory(/home... dlib_build) so that is instead says
+            add_subdirectory([absolute_path_to_where_you_extracted_the_dlib_files]/dlib dlib_build) 
+9. Change the line of CMakeLists.txt that says 'add_executable(main-code ...' so that it instead says
+            add_executable(main-code [absolute_path_to_where_you_created_the_git_repo]/main.cpp)
+10. Run 'sudo apt-get install build-essential'
+11. Run 'sudo apt-get install libopencv-core3.2' (Note that this step hasn't been tested in full, you may need to install other
+components of opencv 3.2, which could be possible via 'sudo apt-get install libopencv*3.2' If you are using an old version of ubuntu that
+doesn't have opencv 3.2 in it's repositories, you will need to follow the installation instructions from opencv's website that involve building from source using 
+cmake, since the code doesn't work with older versions of opencv).
+12. Run 'sudo apt-get install python3-dev python3-numpy python3-serial'
+13. Run 'cmake .' inside of the new directory where you copied the CMakeLists.txt file to.
+14. Run 'cmake --build .' inside of this same new directory that you have copied the CMakeLists.txt file to.
+15. Running 'cmake --build .' is how you will compile the code after you make any changes, and the file ./main-code
+is the executable file that will be generated.
+
+
+Notes for installing arduino:
+You will probably need to install arduino by downloading it off of their website, as the
+version in the repositories is often out of date. After you have done that, follow
+these steps in order to compile arduino_main/arduino_main.ino in the Arduino IDE.
+1. Install the motor driver library by clicking on Tools > Manage Libraries and then searching for
+DualMC33926MotorShield. Install the library that appears with the name DualMC33926MotorShield that is
+provided by Pololu.
+2. Change the board by clicking Tools > board and setting the board selection to
+"Arduino/Genuino Mega or Mega 2560."
+3. You may have to add yourself to the group "dialout." If you try to upload to the Arduino and it
+says that you don't have permission, then type 'ls -l /dev/ttyACM0' with the Arduino connected. It will
+list the group, probably called dailout, and you can add yourself to this group by typing
+'sudo adduser [userName] [groupName]' You will have to restart your computer to be added to the group.
+
+You should now be able to compile the arduino_main code. You may have to
+select the correct board and also select port /dev/ttyACM0 under "Tools"
+every time you open Arduino. 
+
+Note that when you the main code is running on your computer, the only way to hit the escape key when the
+window showing the camera feed is selected.
