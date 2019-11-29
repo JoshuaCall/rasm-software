@@ -10,6 +10,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(analogRead(shoulder_encoder_pin)*degrees_per_step);
+  Serial.println(360 - analogRead(shoulder_encoder_pin)*degrees_per_step);
 
 }
