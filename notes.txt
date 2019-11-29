@@ -1,3 +1,9 @@
+Please note that the motor encoder for the shoulder
+has a problem where it skips about 11 degrees (or approximately
+35 steps) when it is changing from positive to negative values;
+i.e., at around theta = 0 degrees.
+
+
 Rolling my head to the right gives a negative roll angle.
 
 

@@ -12,6 +12,8 @@ double a2 = 19.75; //inches
 
 double shoulderAngle()
 {
+  // This encoder is backwards, so I subtract the reading from 360 degrees so
+  // that the right hand rule will still be followed.
   return degreesInCircle - analogRead(shoulder_encoder_pin)*degrees_per_step;
 }
 
