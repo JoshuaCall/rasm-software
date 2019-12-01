@@ -3,6 +3,8 @@ has a problem where it skips about 11 degrees (or approximately
 35 steps) when it is changing from positive to negative values;
 i.e., at around theta = 0 degrees.
 
+Move the common functionality of manually_move_the_motors and other files to a header file.
+Change d3.
 
 Rolling my head to the right gives a negative roll angle.
 
