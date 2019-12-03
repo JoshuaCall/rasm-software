@@ -18,7 +18,7 @@ int pitch_speed = 0;
 int yaw_speed = 0;
 int base_speed = 0;
 int y_speed = 0;
-int x_speed = 0;
+int elbow_speed = 0;
 bool elbow_speed_not_necessarily_zero = true;
 unsigned long time_at_change_in_elbow_speed = millis();
 unsigned long time_since_change_elbow_speed = 0;
@@ -108,24 +108,24 @@ void loop()
   {
     //Note that this will require a null terminated string!!!!!
     serial_input = Serial.readStringUntil('\0');
-    x_speed = serial_input.toInt();
+    elbow_speed = serial_input.toInt();
   }
     int elbow_encoder_reading = analogRead(elbow_encoder_pin);
-    if (x_speed > 5)
+    if (elbow_speed > 5)
     {
-      x_speed = 120;
+      elbow_speed = 120;
     }
-    else if (x_speed < -5)
+    else if (elbow_speed < -5)
     {
-      x_speed = -90;
+      elbow_speed = -90;
     }
-    else if (x_speed > 0)
+    else if (elbow_speed > 0)
     {
-      x_speed = 90;
+      elbow_speed = 90;
     }
-    else if (x_speed < 0)
+    else if (elbow_speed < 0)
     {
-      x_speed = -70;
+      elbow_speed = -70;
     }
     if (elbow_speed_not_necessarily_zero && time_since_change_elbow_speed < elbow_delay_millis)
     {
@@ -139,7 +139,7 @@ void loop()
     }
     else if (!elbow_speed_not_necessarily_zero && time_since_change_elbow_speed < elbow_delay_millis)
     {
-      x_speed = 0;
+      elbow_speed = 0;
       time_since_change_elbow_speed = millis() - time_at_change_in_elbow_speed;
     }
     else if (!elbow_speed_not_necessarily_zero && time_since_change_elbow_speed >= elbow_delay_millis)
@@ -148,13 +148,13 @@ void loop()
       time_at_change_in_elbow_speed = millis();
       time_since_change_elbow_speed = 0;
     }
-    if (elbow_encoder_reading > 910 && x_speed > 0)
+    if (elbow_encoder_reading > 910 && elbow_speed > 0)
     {
-      x_speed = 0;
+      elbow_speed = 0;
     }
-    else if (elbow_encoder_reading < 400 && x_speed < 0)
+    else if (elbow_encoder_reading < 400 && elbow_speed < 0)
     {
-      x_speed = 0;
+      elbow_speed = 0;
     }
   
 
@@ -222,5 +222,5 @@ void loop()
     setRollSpeed(roll_speed);
     setPitchSpeed(pitch_speed);
     setYawSpeed(yaw_speed);
-    setElbowSpeed(x_speed);
+    setElbowSpeed(elbow_speed);
 }

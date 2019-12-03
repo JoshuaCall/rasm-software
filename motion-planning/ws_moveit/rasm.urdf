@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<robot name="rasm">
+
+  <property name="baseLen" value="0.406"/>
+  <property name="baseWidth" value="0.1"/>
+  <property name="baseHeight" value="0.1"/>
+  <property name="A2Len" value="0.406"/>
+  <property name="A2Width" value="0.1"/>
+  <property name="A2Height" value="0.1"/>
+  <property name="baseA2LimitLower" value="-0.548"/>
+  <property name="baseA2LimitUpper" value="0.548"/>
+
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${baseLen} ${baseWidth} ${baseHeight}"/>
+      </geometry>
+      <origin xyz="${baseLen/2.0} 0 0"/>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${baseLen} ${baseWidth} ${baseHeight}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="A2">
+    <visual>
+      <geometry>
+        <box size="${A2Len} ${A2Width} ${A2Height}"/>
+      </geometry>
+      <origin xyz="${A2Len/2} 0 ${-A2Height/2}"/>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${A2Len} ${A2Width} ${A2Height}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_link_to_A2" type="revolute">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="${baseA2LimitLower}" upper="${baseA2LimitUpper}" velocity="0.5"/>
+    <parent link="base_link"/>
+    <child link="A2"/>
+    <origin xyz="${baseLen} 0 ${-baseHeight/2}"/>
+  </joint>
+</robot>
