@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<robot name="rasm">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rasm">
 
-  <property name="baseLen" value="0.406"/>
-  <property name="baseWidth" value="0.1"/>
-  <property name="baseHeight" value="0.1"/>
-  <property name="A2Len" value="0.406"/>
-  <property name="A2Width" value="0.1"/>
-  <property name="A2Height" value="0.1"/>
-  <property name="baseA2LimitLower" value="-0.548"/>
-  <property name="baseA2LimitUpper" value="0.548"/>
+  <xacro:property name="baseLen" value="0.406"/>
+  <xacro:property name="baseWidth" value="0.1"/>
+  <xacro:property name="baseHeight" value="0.1"/>
+  <xacro:property name="A2Len" value="0.406"/>
+  <xacro:property name="A2Width" value="0.1"/>
+  <xacro:property name="A2Height" value="0.1"/>
+  <xacro:property name="baseA2LimitLower" value="-0.548"/>
+  <xacro:property name="baseA2LimitUpper" value="0.548"/>
 
   <material name="blue">
     <color rgba="0 0 0.8 1"/>
