@@ -1,10 +1,13 @@
+Use "catkin config --extend /opt/ros/${ROS_DISTRO} --cmake-args -DCMAKE_BUILD_TYPE=Release" and "catkin build" to build files for motion planning from motion-planning/ws_moveit/ and then source the workspace using "source ws_moveit/devel/setup.bash", changing the file path as necessary.
+
+
 Please note that the motor encoder for the shoulder
 has a problem where it skips about 11 degrees (or approximately
 35 steps) when it is changing from positive to negative values;
 i.e., at around theta = 0 degrees.
 
 Move the common functionality of manually_move_the_motors and other files to a header file.
-Change d3.
+Change d3 (in the DH parameters) and upload DH parameter drawings to GitHub.
 
 Rolling my head to the right gives a negative roll angle.
 

@@ -1,0 +1,5 @@
+controller_list:
+  - name: fake_rasm_arm_controller
+    joints:
+      - base_link_to_A1
+      - A1_to_A2

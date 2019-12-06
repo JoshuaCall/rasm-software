@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: ""
+    relative_path: /home/browse/Documents/summer_2019/RASM/rasm-software/motion-planning/ws_moveit/rasm.urdf.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/rasm.srdf
+  CONFIG:
+    author_name: Joshua Call
+    author_email: joshuacall@protonmail.com
+    generated_timestamp: 1575612249
