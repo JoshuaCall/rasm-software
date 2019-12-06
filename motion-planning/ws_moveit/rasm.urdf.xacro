@@ -1,14 +1,16 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rasm">
 
-  <xacro:property name="baseLen" value="0.406"/>
-  <xacro:property name="baseWidth" value="0.1"/>
-  <xacro:property name="baseHeight" value="0.1"/>
+  <xacro:property name="A1Len" value="0.406"/>
+  <xacro:property name="A1Width" value="0.1"/>
+  <xacro:property name="A1Height" value="0.1"/>
   <xacro:property name="A2Len" value="0.406"/>
   <xacro:property name="A2Width" value="0.1"/>
   <xacro:property name="A2Height" value="0.1"/>
-  <xacro:property name="baseA2LimitLower" value="-0.548"/>
-  <xacro:property name="baseA2LimitUpper" value="0.548"/>
+  <xacro:property name="A1A2LimitLower" value="-0.548"/>
+  <xacro:property name="A1A2LimitUpper" value="0.548"/>
+  <xacro:property name="base_linkA1LimitLower" value="-0.548"/>
+  <xacro:property name="base_linkA1LimitUpper" value="0.548"/>
 
   <material name="blue">
     <color rgba="0 0 0.8 1"/>
@@ -18,18 +20,19 @@
     <color rgba="1 1 1 1"/>
   </material>
 
+  <link name="base_link" />
 
-  <link name="base_link">
+  <link name="A1">
     <visual>
       <geometry>
-        <box size="${baseLen} ${baseWidth} ${baseHeight}"/>
+        <box size="${A1Len} ${A1Width} ${A1Height}"/>
       </geometry>
-      <origin xyz="${baseLen/2.0} 0 0"/>
+      <origin xyz="${A1Len/2.0} 0 0"/>
       <material name="blue"/>
     </visual>
     <collision>
       <geometry>
-        <box size="${baseLen} ${baseWidth} ${baseHeight}"/>
+        <box size="${A1Len} ${A1Width} ${A1Height}"/>
       </geometry>
     </collision>
   </link>
@@ -49,11 +52,20 @@
     </collision>
   </link>
 
-  <joint name="base_link_to_A2" type="revolute">
+  <joint name="A1_to_A2" type="revolute">
     <axis xyz="0 0 1"/>
-    <limit effort="1000.0" lower="${baseA2LimitLower}" upper="${baseA2LimitUpper}" velocity="0.5"/>
-    <parent link="base_link"/>
+    <limit effort="1000.0" lower="${A1A2LimitLower}" upper="${A1A2LimitUpper}" velocity="0.5"/>
+    <parent link="A1"/>
     <child link="A2"/>
-    <origin xyz="${baseLen} 0 ${-baseHeight/2}"/>
+    <origin xyz="${A1Len} 0 ${-A1Height/2}"/>
   </joint>
+
+  <joint name="base_link_to_A1" type="revolute">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="${base_linkA1LimitLower}" upper="${base_linkA1LimitUpper}" velocity="0.5"/>
+    <parent link="base_link"/>
+    <child link="A1"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+
 </robot>
