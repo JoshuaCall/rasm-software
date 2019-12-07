@@ -1,0 +1,6 @@
+<launch>
+
+  <node name="rasm_motion" pkg="rasm_moveit_config" type="rasm_motion" respawn="false" output="screen">
+  </node>
+
+</launch>

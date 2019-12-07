@@ -1,5 +1,6 @@
 These instructions will be based on using a GNU/Linux operating system
-using the apt package manager.
+using the apt package manager (some instructions might end up being dependent
+on using Ubuntu 18.04).
 
 1. Download the dlib tar.bz2 file from dlib.net
 2. Extract this zipped archive into the folder of your choosing.
@@ -19,7 +20,7 @@ in this new directory unless otherwise specified.
             add_executable(main-code [absolute_path_to_where_you_created_the_git_repo]/main.cpp)
 10. Run 'sudo apt-get install build-essential'
 11. Run 'sudo apt-get install libopencv-core3.2' (Note that this step hasn't been tested in full, you may need to install other
-components of opencv 3.2, which could be possible via 'sudo apt-get install libopencv*3.2' If you are using an old version of ubuntu that
+components of opencv 3.2, which could be possible via 'sudo apt-get install libopencv*3.2' If you are using an old version of Ubuntu that
 doesn't have opencv 3.2 in it's repositories, you will need to follow the installation instructions from opencv's website that involve building from source using 
 cmake, since the code doesn't work with older versions of opencv).
 12. Run 'sudo apt-get install python3-dev python3-numpy python3-serial'

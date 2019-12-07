@@ -8,6 +8,7 @@ i.e., at around theta = 0 degrees.
 
 Move the common functionality of manually_move_the_motors and other files to a header file.
 Change d3 (in the DH parameters) and upload DH parameter drawings to GitHub.
+Change the urdf file joints to be named "shoulder" and "elbow."
 
 Rolling my head to the right gives a negative roll angle.
 
