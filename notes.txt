@@ -1,5 +1,9 @@
 Use "catkin config --extend /opt/ros/${ROS_DISTRO} --cmake-args -DCMAKE_BUILD_TYPE=Release" and "catkin build" to build files for motion planning from motion-planning/ws_moveit/ and then source the workspace using "source ws_moveit/devel/setup.bash", changing the file path as necessary.
 
+THREE MAIN GOALS: Park, home, search.
+Programmed home and park position, search algorithm to find a face and lock onto the face and track it (if it loses the face go back into the search function and try to find
+it or go to home or park).
+
 
 Please note that the motor encoder for the shoulder
 has a problem where it skips about 11 degrees (or approximately

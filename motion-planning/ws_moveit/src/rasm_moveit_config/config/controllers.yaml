@@ -1,0 +1,8 @@
+controller_list:
+ - name: rasm_arm_controller
+   action_ns: follow_joint_trajectory
+   type: FollowJointTrajectory
+   default: true
+   joints:
+     - A1_to_A2
+     - base_link_to_A1

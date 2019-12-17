@@ -8,6 +8,7 @@
 #include <moveit_msgs/CollisionObject.h>
 
 #include <moveit_visual_tools/moveit_visual_tools.h>
+#include "rasm_controller.h"
 
 int main(int argc, char** argv)
 {
@@ -18,6 +19,7 @@ int main(int argc, char** argv)
   ros::NodeHandle node_handle;
   ros::AsyncSpinner spinner(1);
   spinner.start();
+  ros::Subscriber sub = node_handle.subscribe("chatter", 1000, read);
 
   // Setup
   // ^^^^^
@@ -87,9 +89,12 @@ int main(int argc, char** argv)
   // it to work once more links have been added, that is, once the RASM
   // has all 6 degrees of freedom.
   geometry_msgs::Pose target_pose1;
-  target_pose1.orientation.w = 1;
-  target_pose1.position.x = 0.406 + 0.406;
-  target_pose1.position.y = 0;
+  target_pose1.orientation.w = 0.9887711;
+  target_pose1.orientation.x = 0;
+  target_pose1.orientation.y = 0;
+  target_pose1.orientation.z = 0.1494381;
+  target_pose1.position.x = 0.38786661458; 
+  target_pose1.position.y = 0.1199812039;
   target_pose1.position.z = -0.05;
   move_group.setPoseTarget(target_pose1);
 
@@ -136,6 +141,9 @@ int main(int argc, char** argv)
   // To start, we'll create an pointer that references the current robot's state.
   // RobotState is the object that contains all the current position/velocity/acceleration data.
   moveit::core::RobotStatePtr current_state = move_group.getCurrentState();
+  const Eigen::Isometry3d& end_effector_state = current_state->getGlobalLinkTransform(last_link);
+  std::cout << "Translation: \n" << end_effector_state.translation() << "\n";
+  std::cout << "Rotation: \n" << end_effector_state.rotation() << "\n";
   //
   // Next get the current set of joint values for the group.
   std::vector<double> joint_group_positions;
@@ -149,6 +157,15 @@ int main(int argc, char** argv)
   success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   ROS_INFO_NAMED(node_name, "Visualizing plan 2 (joint space goal) %s", success ? "" : "FAILED");
 
+  current_state = move_group.getCurrentState(33333333);
+  const Eigen::Isometry3d& end_effector_state2 = current_state->getGlobalLinkTransform(last_link);
+  std::cout << "Translation: \n" << end_effector_state2.translation() << "\n";
+  std::cout << "Rotation: \n" << end_effector_state2.rotation() << "\n";
+  ros::spinOnce();
+  ros::spinOnce();
+  ros::spinOnce();
+  ros::spinOnce();
+  ros::spinOnce();
   // Visualize the plan in RViz
   visual_tools.deleteAllMarkers();
   visual_tools.publishText(text_pose, "Joint Space Goal", rvt::WHITE, rvt::XLARGE);
@@ -204,6 +221,10 @@ int main(int argc, char** argv)
   success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   ROS_INFO_NAMED(node_name, "Visualizing plan 3 (constraints) %s", success ? "" : "FAILED");
 
+  current_state = move_group.getCurrentState();
+  const Eigen::Isometry3d& end_effector_state3 = current_state->getGlobalLinkTransform(last_link);
+  std::cout << "Translation: \n" << end_effector_state3.translation() << "\n";
+  std::cout << "Rotation: \n" << end_effector_state3.rotation() << "\n";
   // Visualize the plan in RViz
   visual_tools.deleteAllMarkers();
   visual_tools.publishAxisLabeled(start_pose2, "start");
