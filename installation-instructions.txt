@@ -33,7 +33,7 @@ is the executable file that will be generated.
 Notes for installing arduino:
 You will probably need to install arduino by downloading it off of their website, as the
 version in the repositories is often out of date. After you have done that, follow
-these steps in order to compile arduino_main/arduino_main.ino in the Arduino IDE.
+these steps in order to compile the .ino files in the Arduino IDE.
 1. Install the motor driver library by clicking on Tools > Manage Libraries and then searching for
 DualMC33926MotorShield. Install the library that appears with the name DualMC33926MotorShield that is
 provided by Pololu.
@@ -43,10 +43,17 @@ provided by Pololu.
 says that you don't have permission, then type 'ls -l /dev/ttyACM0' with the Arduino connected. It will
 list the group, probably called dailout, and you can add yourself to this group by typing
 'sudo adduser [userName] [groupName]' You will have to restart your computer to be added to the group.
+4. Create a symbolic link to arduino_extra/common.h in your Arduino libraries folder. To do this, you
+will need to first find your libraries folder. Do this by clicking File > New. Then, in this new sketch,
+click File > Save As. This will open a file browser dialog in the location of your main Arduino directory.
+Make note of where this directory is. Close the file browser and open a terminal in the location of your
+main Arduino directory. Execute the following two commands in order:
+cd libraries
+ln -s [absolute_path_to_where_you_created_the_git_repo]/arduino_extra/common.h
 
 You should now be able to compile the arduino_main code. You may have to
 select the correct board and also select port /dev/ttyACM0 under "Tools"
 every time you open Arduino. 
 
-Note that when you the main code is running on your computer, the only way to hit the escape key when the
-window showing the camera feed is selected.
+Note that when you the main code is running on your computer, the only way to exit is to 
+hit the escape key when the window showing the camera feed is selected.

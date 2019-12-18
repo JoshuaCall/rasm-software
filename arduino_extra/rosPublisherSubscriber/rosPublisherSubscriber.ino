@@ -1,7 +1,10 @@
 /*
- * rosserial Publisher Example
- * Prints "hello world!"
- */
+
+   Please note that this code
+   will use a default baud rate
+   of 57600
+
+*/
 
 #include <ros.h>
 #include <std_msgs/Float64.h>
