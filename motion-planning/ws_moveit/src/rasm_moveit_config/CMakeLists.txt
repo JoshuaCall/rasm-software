@@ -20,6 +20,8 @@ find_package(catkin REQUIRED
     tf2_ros
     tf2_eigen
     tf2_geometry_msgs
+    controller_manager
+    controller_interface
 )
 
 
@@ -35,6 +37,8 @@ catkin_package(
     moveit_ros_planning_interface
     interactive_markers
     tf2_geometry_msgs
+    controller_manager
+    controller_interface
   DEPENDS
     EIGEN3
 )

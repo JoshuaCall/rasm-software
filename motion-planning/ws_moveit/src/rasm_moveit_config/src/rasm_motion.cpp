@@ -9,6 +9,7 @@
 
 #include <moveit_visual_tools/moveit_visual_tools.h>
 #include "rasm_controller.h"
+#include <controller_manager/controller_manager.h>
 
 int main(int argc, char** argv)
 {
@@ -19,8 +20,10 @@ int main(int argc, char** argv)
   ros::NodeHandle node_handle;
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  ros::Subscriber shoulder_sub = node_handle.subscribe("shoulder", 1000, read);
-  ros::Subscriber elbow_sub = node_handle.subscribe("elbow", 1000, read);
+  MyRobot rasm;
+  controller_manager::ControllerManager cm(&rasm);
+  ros::Subscriber shoulder_sub = node_handle.subscribe("shoulder", 1000, &MyRobot::Reader::read, &rasm.shoulder);
+  ros::Subscriber elbow_sub = node_handle.subscribe("elbow", 1000, &MyRobot::Reader::read, &rasm.elbow);
 
   // Setup
   // ^^^^^
@@ -74,7 +77,7 @@ int main(int argc, char** argv)
   std::vector<double> joint_group_positions;
   current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
 
-
+  rasm.read();
   ros::waitForShutdown();
   return 0;
 }

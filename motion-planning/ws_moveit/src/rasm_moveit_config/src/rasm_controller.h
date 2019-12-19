@@ -8,6 +8,7 @@
 class MyRobot : public hardware_interface::RobotHW
 {
 public:
+  virtual ~MyRobot(){}
   MyRobot() 
  { 
    // connect and register the joint state interface
@@ -28,8 +29,31 @@ public:
 
    registerInterface(&jnt_pos_interface);
   }
+  
 
-  friend void read(const std_msgs::Float64& msg);
+  class Reader
+  {
+  private:
+    double value;
+  public:
+    void read(const std_msgs::Float64& msg)
+    {
+      value = msg.data;
+    }
+    double getValue()
+    {
+      return value;
+    }
+  };
+
+  Reader shoulder;
+  Reader elbow;
+
+  void read()
+  {
+    this->pos[0] = shoulder.getValue();
+    this->pos[1] = elbow.getValue();
+  }
 
   friend void write();
 
@@ -42,7 +66,3 @@ private:
   double eff[2];
 };
 
-void read(const std_msgs::Float64& msg)
-{
-  std::cout << msg.data << std::endl;
-}
