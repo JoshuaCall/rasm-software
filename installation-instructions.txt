@@ -57,3 +57,6 @@ every time you open Arduino.
 
 Note that when you the main code is running on your computer, the only way to exit is to 
 hit the escape key when the window showing the camera feed is selected.
+
+Note for future, more complete installation instructions:
+It may be necessary to comment out lines 73 and 74 of /opt/ros/melodic/include/robot_mechanism_controllers/joint_trajectory_action_controller.h

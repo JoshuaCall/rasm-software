@@ -22,6 +22,7 @@ find_package(catkin REQUIRED
     tf2_geometry_msgs
     controller_manager
     controller_interface
+    robot_mechanism_controllers
 )
 
 
@@ -39,6 +40,7 @@ catkin_package(
     tf2_geometry_msgs
     controller_manager
     controller_interface
+    robot_mechanism_controllers
   DEPENDS
     EIGEN3
 )

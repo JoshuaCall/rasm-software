@@ -10,6 +10,9 @@
 #include <moveit_visual_tools/moveit_visual_tools.h>
 #include "rasm_controller.h"
 #include <controller_manager/controller_manager.h>
+#include <robot_mechanism_controllers/joint_trajectory_action_controller.h>
+#include <control_msgs/FollowJointTrajectoryAction.h>
+
 
 int main(int argc, char** argv)
 {
